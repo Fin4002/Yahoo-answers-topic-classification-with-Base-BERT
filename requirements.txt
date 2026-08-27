@@ -1,0 +1,15 @@
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+nltk
+gensim
+# For Intel Arc GPU (B580) acceleration, install PyTorch from the XPU index instead of the default CPU wheel:
+#   pip install torch --index-url https://download.pytorch.org/whl/xpu
+torch
+transformers
+datasets
+wordcloud
+tqdm
+jupyterlab
