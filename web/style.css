@@ -353,6 +353,25 @@ footer a:hover { text-decoration: underline; }
 .error { color: #d03b3b; font-size: 0.9rem; }
 [hidden] { display: none !important; }
 
+@media (min-width: 64rem) {
+  /* two-column desktop layout: form left, result right, both above the fold */
+  main {
+    max-width: 74rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: start;
+  }
+  .hero { grid-column: 1 / -1; padding: 1.2rem 1.2rem 0.9rem; }
+  h1 { font-size: clamp(1.7rem, 2.6vw, 2.2rem); }
+  .sub { margin-bottom: 0.9rem; }
+  .topics span { font-size: 0.72rem; padding: 0.22rem 0.6rem; }
+  .input-card { grid-column: 1; grid-row: 2; }
+  #loading, #result { grid-column: 2; grid-row: 2; position: sticky; top: 1.25rem; }
+  textarea { min-height: 7rem; }
+  #error, footer { grid-column: 1 / -1; }
+}
+
 @media (max-width: 560px) {
   body { padding: 1rem 0.75rem 3rem; }
   .hero { padding: 1.4rem 0.4rem 1.2rem; }
