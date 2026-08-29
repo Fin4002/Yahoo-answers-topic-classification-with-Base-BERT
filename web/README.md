@@ -43,19 +43,23 @@ python -m http.server 8080    # then open http://localhost:8080
 
 (ES modules require http, not file://.)
 
-## Deploy (Vercel)
+## Deploy (Vercel) — done
 
-The 105 MB `model/onnx/model_quantized.onnx` exceeds GitHub's 100 MB file
-limit, so deploy **from this folder via the Vercel CLI** rather than a GitHub
-import (the file is gitignored):
+**Live: https://yahoo-answers-bert-finesse-b160.vercel.app**
+
+Vercel caps files at 100 MB, so the 105 MB int8 weights live in the public HF
+model repo [`Finesse4002/yahoo-answers-bert`](https://huggingface.co/Finesse4002/yahoo-answers-bert)
+and the browser fetches them from the Hub CDN on first visit (cached after).
+`app.js` pins the repo id in `HF_REPO`. To redeploy after changes:
 
 ```powershell
-npm i -g vercel   # or: npx vercel
 cd web
-vercel --prod     # first run: log in with GitHub, accept defaults
+node node_modules\vercel\dist\vc.js deploy --prod --yes   # vercel CLI is a local devDep
 ```
 
-Static project, no build command, no output directory changes.
+`.vercelignore` keeps the local model copy, tests and node_modules out of the
+upload (the deployed site is ~15 KB of static files). Deployment-protection
+(SSO) was disabled on the project so the public URL needs no login.
 
 ## Regenerating the model artifacts
 

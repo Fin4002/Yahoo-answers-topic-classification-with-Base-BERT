@@ -5,3 +5,5 @@ package-lock.json
 # Vercel from this folder with the CLI (`vercel --prod`) so the file uploads
 # from disk, or host it in an HF model repo and point app.js at the URL.
 model/onnx/*.onnx
+
+.vercel

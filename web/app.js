@@ -5,8 +5,12 @@ import { AutoModelForSequenceClassification, AutoTokenizer, env } from 'https://
 
 import { buildText, preprocessStandard } from './preprocess.js';
 
-env.allowLocalModels = true;
-env.allowRemoteModels = false;
+// Weights live in a public HF model repo (105 MB exceeds Vercel's 100 MB
+// per-file limit); the browser fetches them from the Hub CDN on first visit.
+const HF_REPO = 'finesse4002/yahoo-answers-bert';
+
+env.allowLocalModels = false;
+env.allowRemoteModels = true;
 
 const CLASS_NAMES = [
   'Society & Culture',
@@ -60,8 +64,8 @@ async function init() {
   };
 
   try {
-    const tokenizer = await AutoTokenizer.from_pretrained('./model');
-    const model = await AutoModelForSequenceClassification.from_pretrained('./model', {
+    const tokenizer = await AutoTokenizer.from_pretrained(HF_REPO);
+    const model = await AutoModelForSequenceClassification.from_pretrained(HF_REPO, {
       dtype: 'q8',
       progress_callback: onProgress,
     });

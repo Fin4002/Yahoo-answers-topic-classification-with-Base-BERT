@@ -22,7 +22,12 @@ import os
 import re
 import string
 import sys
+import threading
 from pathlib import Path
+
+# ZeroGPU Spaces REQUIRE this import (before torch); it registers the app
+# with the GPU supervisor and is a no-op on every other machine.
+import spaces
 
 import gradio as gr
 import nltk
@@ -49,9 +54,10 @@ CLASS_NAMES = [
     'Politics & Government',
 ]
 
-# ZeroGPU Spaces attach a GPU only inside @spaces.GPU calls - moving the model
-# to CUDA at startup there crashes, so stay on CPU (inference is fast enough).
-if os.environ.get('SPACES_ZERO_GPU', '') == '1':
+# On HF Spaces run CPU-only: ZeroGPU kills apps that touch CUDA outside a
+# @spaces.GPU window, and CPU inference (~1-2 s) is all this app needs.
+# Locally CUDA (RTX 4060) / XPU are still used when present.
+if os.environ.get('SPACES_ZERO_GPU', '') == '1' or os.environ.get('HF_SPACE_ID'):
     DEVICE = torch.device('cpu')
 elif torch.cuda.is_available():
     DEVICE = torch.device('cuda')
@@ -169,4 +175,8 @@ demo = gr.Interface(
 )
 
 if __name__ == '__main__':
-    demo.launch()
+    # On ZeroGPU Spaces launch() returns immediately (platform environment),
+    # ending the script and killing the container - hold the process open.
+    # ssr_mode=False avoids the extra Node proxy, which also crashes there.
+    demo.launch(ssr_mode=False)
+    threading.Event().wait()
