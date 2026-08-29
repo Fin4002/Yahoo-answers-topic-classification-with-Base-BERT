@@ -1,0 +1,7 @@
+# Fine-tuned model weights (440 MB - GitHub rejects >100 MB files).
+# Exported locally via app/export_cell.txt; for hosting, push to the HF Hub
+# and point MODEL_ID at the repo id.
+model/
+
+# Local clone of the deployed HF Space (has its own git repo).
+space/

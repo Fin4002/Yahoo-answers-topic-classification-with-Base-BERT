@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yahoo! Answers Topic Classification — Base BERT</title>
+  <meta name="description" content="Fine-tuned bert-base-uncased classifying questions into 10 topics, running entirely in your browser." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div id="bg-tokens"></div>
+  </div>
+  <main>
+    <header class="hero">
+      <div class="blob blob-a" aria-hidden="true"></div>
+      <div class="blob blob-b" aria-hidden="true"></div>
+
+      <div class="hero-row">
+        <div class="hero-text">
+          <p class="eyebrow">CSE440 · NLP II · Lab Project</p>
+          <h1>Which of <span class="grad">10 topics</span><br />does your question belong to?</h1>
+          <p class="sub">
+            Fine-tuned <strong>bert-base-uncased</strong> — best of 11 models we trained
+            (<strong>70.0% accuracy / 0.698 macro-F1</strong> on the held-out test set).
+            The int8 model runs entirely in your browser; nothing is sent to a server.
+          </p>
+        </div>
+        <nav class="members" aria-label="Team members' GitHub profiles">
+          <a href="https://github.com/TamateNeko" target="_blank" rel="noopener">
+            <img src="https://github.com/TamateNeko.png" alt="" loading="lazy"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'avatar-fallback',textContent:'T'}))" />
+            <span>TamateNeko</span>
+          </a>
+          <a href="https://github.com/Fin4002" target="_blank" rel="noopener">
+            <img src="https://github.com/Fin4002.png" alt="" loading="lazy"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'avatar-fallback',textContent:'F'}))" />
+            <span>Fin4002</span>
+          </a>
+          <a href="https://github.com/Arqade69" target="_blank" rel="noopener">
+            <img src="https://github.com/Arqade69.png" alt="" loading="lazy"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'avatar-fallback',textContent:'A'}))" />
+            <span>Arqade69</span>
+          </a>
+          <a href="https://github.com/LoguMoguChogu" target="_blank" rel="noopener">
+            <img src="https://github.com/LoguMoguChogu.png" alt="" loading="lazy"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'avatar-fallback',textContent:'L'}))" />
+            <span>LoguMoguChogu</span>
+          </a>
+        </nav>
+      </div>
+      <div class="topics" aria-label="The 10 topic classes">
+        <span>🌍 Society &amp; Culture</span>
+        <span>🔬 Science &amp; Mathematics</span>
+        <span>🩺 Health</span>
+        <span>📚 Education &amp; Reference</span>
+        <span>💻 Computers &amp; Internet</span>
+        <span>⚽ Sports</span>
+        <span>💼 Business &amp; Finance</span>
+        <span>🎬 Entertainment</span>
+        <span>👨‍👩‍👧 Family &amp; Relationships</span>
+        <span>🏛️ Politics &amp; Government</span>
+      </div>
+    </header>
+
+    <section class="card input-card">
+      <div>
+        <label for="q-title">Question title</label>
+        <input id="q-title" type="text" placeholder="e.g. how do i fix the blue screen error on windows" />
+      </div>
+      <div>
+        <label for="q-content">Question content</label>
+        <textarea id="q-content" placeholder="The body of the question…"></textarea>
+      </div>
+      <button id="classify" class="primary" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.35-4.35"></path>
+        </svg>
+        Classify
+      </button>
+      <div>
+        <p class="examples-label">Try an example:</p>
+        <div class="examples" id="examples"></div>
+      </div>
+    </section>
+
+    <section class="card" id="loading" hidden>
+      <div class="load-row">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="status" id="load-status">Loading model…</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="load-fill"></div></div>
+      <div class="status">~105 MB, cached by your browser after the first visit.</div>
+    </section>
+
+    <section class="card result" id="result" hidden>
+      <div class="result-head">
+        <div class="gauge" aria-hidden="true">
+          <svg viewBox="0 0 96 96">
+            <circle class="gauge-track" cx="48" cy="48" r="40"></circle>
+            <circle class="gauge-fill" id="gauge-fill" cx="48" cy="48" r="40"></circle>
+          </svg>
+          <span class="gauge-num" id="gauge-num">0%</span>
+        </div>
+        <div class="result-title">
+          <p class="result-topic" id="topic"></p>
+          <span class="result-conf" id="conf"></span>
+        </div>
+      </div>
+      <div class="bars" id="bars"></div>
+      <details>
+        <summary>Model input (preprocessed)</summary>
+        <code id="preprocessed"></code>
+      </details>
+    </section>
+
+    <p class="error" id="error" hidden></p>
+
+    <footer>
+      CSE440 (NLP II) lab project · same preprocessing pipeline as the
+      <a href="https://github.com/Fin4002/Yahoo-answers-topic-classification-with-Base-BERT" target="_blank" rel="noopener">project notebook</a>
+      (measured parity: browser variant 0.699 vs 0.700 test accuracy)
+    </footer>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
