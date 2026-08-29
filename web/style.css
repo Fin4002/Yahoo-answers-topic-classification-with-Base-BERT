@@ -146,19 +146,56 @@ h1 {
   background-clip: text;
   color: transparent;
 }
-.sub { color: var(--text-secondary); margin: 0 0 0.5rem; font-size: 0.96rem; max-width: 42rem; }
-.sub strong { color: var(--text-primary); font-weight: 600; }
+/* hero: title text left, GitHub member chips top-right */
+.hero-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.75rem; position: relative; }
+.hero-text { max-width: 40rem; }
 
-.team { color: var(--text-secondary); font-size: 0.86rem; margin: 0 0 1.2rem; }
-.team-label {
-  font-family: var(--font-display);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-right: 0.6rem;
+.members { display: flex; flex-direction: column; gap: 0.45rem; flex: none; padding-top: 0.15rem; }
+.members a {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem 0.25rem 0.3rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
 }
+.members a:hover {
+  background: var(--surface-1);
+  border-color: var(--grid);
+  color: var(--accent);
+  box-shadow: var(--shadow-card);
+  transform: translateX(-2px);
+}
+.members img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--grid);
+  background: var(--grid);
+  flex: none;
+}
+.avatar-fallback {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--grid);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.sub { color: var(--text-secondary); margin: 0 0 1.2rem; font-size: 0.96rem; }
+.sub strong { color: var(--text-primary); font-weight: 600; }
 
 .topics { display: flex; flex-wrap: wrap; gap: 0.45rem; position: relative; }
 .topics span {
@@ -383,6 +420,10 @@ footer a:hover { text-decoration: underline; }
   #error, footer { grid-column: 1 / -1; }
 }
 
+@media (max-width: 880px) {
+  .hero-row { flex-direction: column-reverse; gap: 0.9rem; }
+  .members { flex-direction: row; flex-wrap: wrap; }
+}
 @media (max-width: 560px) {
   body { padding: 1rem 0.75rem 3rem; }
   .hero { padding: 1.4rem 0.4rem 1.2rem; }
