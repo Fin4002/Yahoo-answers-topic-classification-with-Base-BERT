@@ -1,0 +1,38 @@
+# Export cell — paste this ONCE as a new cell at the END of
+# notebooks/yahoo_answers_topic_classification_full.ipynb and run it right
+# after the notebook finishes (the BERT v1 model must still be in memory).
+#
+# It writes the fine-tuned model + tokenizer + label names into app/model/
+# so that app/app.py can serve it. Keep the file out of git (app/.gitignore
+# already excludes it - GitHub rejects files over 100 MB anyway).
+
+from pathlib import Path
+
+out = Path('app', 'model')
+out.mkdir(parents=True, exist_ok=True)
+
+best_bert_model.config.id2label = {i: name for i, name in enumerate(CLASS_NAMES)}
+best_bert_model.config.label2id = {name: i for i, name in enumerate(CLASS_NAMES)}
+best_bert_model.save_pretrained(out)
+bert_tokenizer.save_pretrained(out)
+
+print('Exported fine-tuned BERT v1 ->', out.resolve())
+
+# --- Alternative: export BERT v2 instead (the Kaggle re-run, best_v2_model).
+# NOTE: v2 was trained on RAW title/content pair-encoded text, not the
+# lemmatized single-segment text v1 used. If you export v2, app.py must be
+# changed to match (feed title/content as a token pair instead of the
+# preprocessed text) - ask and it will be adjusted.
+#
+# best_v2_model.config.id2label = {i: name for i, name in enumerate(CLASS_NAMES)}
+# best_v2_model.config.label2id = {name: i for i, name in enumerate(CLASS_NAMES)}
+# best_v2_model.save_pretrained(out)
+# bert_tokenizer.save_pretrained(out)
+
+# --- Optional (needed only for HF Spaces deployment without committing the
+# 440 MB model): push the model to your Hugging Face account instead, then set
+# MODEL_ID on the Space to this repo id. Requires `huggingface_hub` login.
+#
+# REPO_ID = 'YOUR_USERNAME/yahoo-answers-bert'
+# best_bert_model.push_to_hub(REPO_ID)
+# bert_tokenizer.push_to_hub(REPO_ID)

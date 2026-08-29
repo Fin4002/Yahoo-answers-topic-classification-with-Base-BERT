@@ -1,0 +1,8 @@
+# Runtime deps for the Gradio interface only (kept separate from the root
+# requirements.txt on purpose). Install inside the project .venv:
+#   uv pip install -r app/requirements.txt
+
+gradio
+torch
+transformers
+nltk
