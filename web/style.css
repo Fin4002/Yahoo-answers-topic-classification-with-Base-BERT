@@ -44,6 +44,50 @@
 
 * { box-sizing: border-box; }
 
+/* ---------- background: drifting BERT tokens over an embedding grid ------ */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+main { position: relative; z-index: 1; }
+
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, var(--grid) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.45;
+  -webkit-mask-image: linear-gradient(180deg, transparent, black 18%, black 82%, transparent);
+  mask-image: linear-gradient(180deg, transparent, black 18%, black 82%, transparent);
+}
+
+#bg-tokens span {
+  position: absolute;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  animation: token-rise linear infinite;
+  will-change: transform;
+}
+#bg-tokens span.special {
+  font-weight: 700;
+  padding: 0.05rem 0.5rem;
+  border: 1px solid var(--baseline);
+  border-radius: 6px;
+}
+@keyframes token-rise {
+  from { transform: translateY(112vh) rotate(-2deg); }
+  to { transform: translateY(-18vh) rotate(2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #bg-tokens span { animation: none !important; }
+}
+
 body {
   margin: 0;
   padding: 2.5rem 1rem 5rem;

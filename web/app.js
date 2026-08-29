@@ -194,6 +194,35 @@ function mountExamples() {
   });
 }
 
+function seedBackgroundTokens() {
+  // Drifting BERT tokens: special tokens + preprocessed words from the
+  // project's real example questions. Purely decorative (aria-hidden layer).
+  const special = ['[CLS]', '[SEP]', '[MASK]', '[CLS]', '[SEP]', '[MASK]'];
+  const words = [
+    'blue screen', 'windows', 'calculus', 'derivatives', 'sore throat',
+    'fever', 'doctor', 'election', 'administration', 'cartoon', 'talking dog',
+    'retirement', 'investing', 'toddler', 'sleep', 'kobe', 'lebron',
+    'shoes indoors', 'softmax', 'attention', 'embeddings', 'lemmatized',
+    'topic', 'question', 'wordpiece', 'uncased',
+  ];
+  const all = [...special.map((t) => ({ t, sp: true })),
+               ...words.map((t) => ({ t, sp: false }))];
+
+  const host = document.getElementById('bg-tokens');
+  for (const { t, sp } of all) {
+    const s = document.createElement('span');
+    if (sp) s.className = 'special';
+    s.textContent = t;
+    s.style.left = `${2 + Math.random() * 90}vw`;
+    s.style.animationDuration = `${34 + Math.random() * 38}s`;
+    s.style.animationDelay = `${-Math.random() * 70}s`;
+    s.style.opacity = (0.05 + Math.random() * 0.06).toFixed(2);
+    s.style.fontSize = `${0.68 + Math.random() * 0.42}rem`;
+    host.appendChild(s);
+  }
+}
+
 classifyBtn.addEventListener('click', onClassify);
 mountExamples();
+seedBackgroundTokens();
 init();
