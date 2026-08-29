@@ -146,8 +146,19 @@ h1 {
   background-clip: text;
   color: transparent;
 }
-.sub { color: var(--text-secondary); margin: 0 0 1.2rem; font-size: 0.96rem; max-width: 42rem; }
+.sub { color: var(--text-secondary); margin: 0 0 0.5rem; font-size: 0.96rem; max-width: 42rem; }
 .sub strong { color: var(--text-primary); font-weight: 600; }
+
+.team { color: var(--text-secondary); font-size: 0.86rem; margin: 0 0 1.2rem; }
+.team-label {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-right: 0.6rem;
+}
 
 .topics { display: flex; flex-wrap: wrap; gap: 0.45rem; position: relative; }
 .topics span {
