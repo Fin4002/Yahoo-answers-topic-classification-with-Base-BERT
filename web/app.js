@@ -99,6 +99,7 @@ function render({ probs, clean }) {
 
   const bars = $('bars');
   bars.textContent = '';
+  const fills = [];
   for (const r of rows) {
     const row = document.createElement('div');
     row.className = 'bar-row' + (r === top ? ' winner' : '');
@@ -111,7 +112,6 @@ function render({ probs, clean }) {
     track.className = 'bar-track';
     const fill = document.createElement('div');
     fill.className = 'bar-fill';
-    fill.style.width = `${Math.max(r.p * 100, 1).toFixed(2)}%`;
     track.appendChild(fill);
 
     const value = document.createElement('span');
@@ -120,7 +120,12 @@ function render({ probs, clean }) {
 
     row.append(label, track, value);
     bars.appendChild(row);
+    fills.push([fill, Math.max(r.p * 100, 1)]);
   }
+  // bars start at width 0 (CSS) - set targets next frame so they animate in
+  requestAnimationFrame(() => {
+    for (const [fill, pct] of fills) fill.style.width = `${pct.toFixed(2)}%`;
+  });
   $('result').hidden = false;
 }
 

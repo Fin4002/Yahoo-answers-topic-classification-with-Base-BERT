@@ -10,13 +10,19 @@
 <body>
   <main>
     <header>
+      <p class="eyebrow">CSE440 · NLP II · Lab Project</p>
       <h1>Yahoo! Answers Topic Classification</h1>
       <p class="sub">
         Fine-tuned <strong>bert-base-uncased</strong> — the best of 11 models from our
-        CSE440 project (<strong>70.0% accuracy / 0.698 macro-F1</strong> on the held-out
-        test set). This page runs the int8-quantized model entirely in your browser:
-        nothing is sent to a server.
+        project (<strong>70.0% accuracy / 0.698 macro-F1</strong> on the held-out test set).
+        The int8-quantized model runs entirely in your browser: nothing is sent to a server.
       </p>
+      <div class="badges">
+        <span class="badge"><b>70.0%</b> test accuracy</span>
+        <span class="badge"><b>0.698</b> macro-F1</span>
+        <span class="badge"><b>10</b> topics</span>
+        <span class="badge">runs <b>100%</b> in-browser</span>
+      </div>
     </header>
 
     <section class="card">
@@ -28,12 +34,23 @@
         <label for="q-content">Question content</label>
         <textarea id="q-content" placeholder="The body of the question…"></textarea>
       </div>
-      <button id="classify" class="primary" disabled>Classify</button>
-      <div class="examples" id="examples"></div>
+      <button id="classify" class="primary" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.35-4.35"></path>
+        </svg>
+        Classify
+      </button>
+      <div>
+        <p class="examples-label">Try an example:</p>
+        <div class="examples" id="examples"></div>
+      </div>
     </section>
 
     <section class="card" id="loading" hidden>
-      <div class="status" id="load-status">Loading model…</div>
+      <div class="load-row">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="status" id="load-status">Loading model…</div>
+      </div>
       <div class="progress-track"><div class="progress-fill" id="load-fill"></div></div>
       <div class="status">~105 MB, cached by your browser after the first visit.</div>
     </section>
