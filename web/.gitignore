@@ -1,0 +1,7 @@
+node_modules/
+package-lock.json
+
+# 105 MB int8 ONNX weights - exceeds GitHub's 100 MB file limit; deploy to
+# Vercel from this folder with the CLI (`vercel --prod`) so the file uploads
+# from disk, or host it in an HF model repo and point app.js at the URL.
+model/onnx/*.onnx

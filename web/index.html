@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yahoo! Answers Topic Classification — Base BERT</title>
+  <meta name="description" content="Fine-tuned bert-base-uncased classifying questions into 10 topics, running entirely in your browser." />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Yahoo! Answers Topic Classification</h1>
+      <p class="sub">
+        Fine-tuned <strong>bert-base-uncased</strong> — the best of 11 models from our
+        CSE440 project (<strong>70.0% accuracy / 0.698 macro-F1</strong> on the held-out
+        test set). This page runs the int8-quantized model entirely in your browser:
+        nothing is sent to a server.
+      </p>
+    </header>
+
+    <section class="card">
+      <div>
+        <label for="q-title">Question title</label>
+        <input id="q-title" type="text" placeholder="e.g. how do i fix the blue screen error on windows" />
+      </div>
+      <div>
+        <label for="q-content">Question content</label>
+        <textarea id="q-content" placeholder="The body of the question…"></textarea>
+      </div>
+      <button id="classify" class="primary" disabled>Classify</button>
+      <div class="examples" id="examples"></div>
+    </section>
+
+    <section class="card" id="loading" hidden>
+      <div class="status" id="load-status">Loading model…</div>
+      <div class="progress-track"><div class="progress-fill" id="load-fill"></div></div>
+      <div class="status">~105 MB, cached by your browser after the first visit.</div>
+    </section>
+
+    <section class="card" id="result" hidden>
+      <div class="result-head">
+        <p class="result-topic" id="topic"></p>
+        <span class="result-conf" id="conf"></span>
+      </div>
+      <div class="bars" id="bars"></div>
+      <details>
+        <summary>Model input (preprocessed)</summary>
+        <code id="preprocessed"></code>
+      </details>
+    </section>
+
+    <p class="error" id="error" hidden></p>
+
+    <footer>
+      CSE440 (NLP II) lab project · same preprocessing pipeline as the
+      <a href="https://github.com/Fin4002/Yahoo-answers-topic-classification-with-Base-BERT" target="_blank" rel="noopener">project notebook</a>
+      (measured parity: browser variant 0.699 vs 0.700 test accuracy)
+    </footer>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
