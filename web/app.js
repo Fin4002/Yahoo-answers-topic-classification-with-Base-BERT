@@ -34,6 +34,19 @@ const EXAMPLES = [
   ['1990s cartoon with a talking dog', 'trying to remember an old cartoon from the 90s where the dog solves mysteries'],
 ];
 
+const TOPIC_EMOJI = {
+  'Society & Culture': '🌍',
+  'Science & Mathematics': '🔬',
+  'Health': '🩺',
+  'Education & Reference': '📚',
+  'Computers & Internet': '💻',
+  'Sports': '⚽',
+  'Business & Finance': '💼',
+  'Entertainment': '🎬',
+  'Family & Relationships': '👨‍👩‍👧',
+  'Politics & Government': '🏛️',
+};
+
 const $ = (id) => document.getElementById(id);
 const classifyBtn = $('classify');
 
@@ -93,9 +106,25 @@ function render({ probs, clean }) {
   const rows = CLASS_NAMES.map((name, i) => ({ name, p: probs[i] })).sort((a, b) => b.p - a.p);
   const top = rows[0];
 
-  $('topic').textContent = top.name;
+  $('topic').textContent = `${TOPIC_EMOJI[top.name] ?? ''} ${top.name}`.trim();
   $('conf').textContent = `${(top.p * 100).toFixed(1)}% confidence`;
   $('preprocessed').textContent = clean || '(empty)';
+
+  // confidence gauge: ring sweeps to the winner's probability, number counts up
+  const CIRC = 251.33;
+  const gaugeFill = $('gauge-fill');
+  const gaugeNum = $('gauge-num');
+  gaugeFill.style.strokeDashoffset = CIRC;
+  requestAnimationFrame(() => {
+    gaugeFill.style.strokeDashoffset = (CIRC * (1 - top.p)).toFixed(2);
+  });
+  const t0 = performance.now();
+  const tick = (t) => {
+    const k = Math.min((t - t0) / 700, 1);
+    gaugeNum.textContent = `${Math.round(top.p * 100 * k)}%`;
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 
   const bars = $('bars');
   bars.textContent = '';
